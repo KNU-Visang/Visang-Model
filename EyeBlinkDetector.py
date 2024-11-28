@@ -1,14 +1,16 @@
+import platform, os
 import cv2, dlib
 import numpy as np
 from imutils import face_utils
 from keras.models import load_model
 class EyeBlinkDetector():
+    FILE_PATH = os.path.dirname(__file__) + "/" if platform.system() == "Linux" else ""
+
     IMG_SIZE = (34, 26)
-
     detector = dlib.get_frontal_face_detector()
-    predictor = dlib.shape_predictor('models/shape_predictor_68_face_landmarks.dat')
+    predictor = dlib.shape_predictor(FILE_PATH + 'models/shape_predictor_68_face_landmarks.dat')
 
-    model = load_model('models/eye_blink_detector_model.keras')
+    model = load_model(FILE_PATH + 'models/eye_blink_detector_model.keras')
     
     def crop_eye(self, img, eye_points):
         x1, y1 = np.amin(eye_points, axis=0)
@@ -68,5 +70,5 @@ class EyeBlinkDetector():
 
 if __name__ == "__main__":
     eyeBlinkDetector = EyeBlinkDetector()
-    eyeBlinkDetector.eye_blink_detector("./images/test1.png")
-    eyeBlinkDetector.eye_blink_detector("./images/test2.png")
+    eyeBlinkDetector.eye_blink_detector(EyeBlinkDetector.FILE_PATH + "images/test1.png")
+    eyeBlinkDetector.eye_blink_detector(EyeBlinkDetector.FILE_PATH + "images/test2.png")
